@@ -35,6 +35,14 @@ exports.read_a_product = function(req, res) {
         }
         res.json(product);
     });
+    // Product.findOne({product_id: req.params.productId}, function(err, product) {
+    //     if (err) {
+    //         err.err = 'Bir şeyler ters gitti. Büyük ihtimalle ya ID yanlış ya da query silindi.'
+    //         return res.json(err);
+    //         // return res.send(err);
+    //     }
+    //     res.json(product);
+    // });
 };
 
 

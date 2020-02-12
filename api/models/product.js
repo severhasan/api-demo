@@ -11,8 +11,12 @@ const productSchema = new mongoose.Schema({
         required: 'Adres boş bırakılamaz.',
     },
     image_url: {
-        type: String,
-        required: 'Resim adresi boş bırakılamaz.',
+        main: {
+            type: String,
+            required: 'Resim adresi boş bırakılamaz.',
+        },
+        front: String,
+        back: String
     },
     category: {
         type: String,
@@ -66,14 +70,14 @@ const productSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    color_variety: [
+    variety: [
         {
-            color: String,
+            name: String,
             address: String
         }
     ],
     pattern: String,
-    created_date: {
+    date_created: {
         type: Date,
         default: Date.now
     }

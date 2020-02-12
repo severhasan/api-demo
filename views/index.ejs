@@ -31,22 +31,41 @@
         input {
             width: 500px;
         }
-        #measurements {
+        #measurements, #img-urls {
+            margin-top: 10px;
             padding: 10px;
             border: 1px solid rgba(133, 157, 160, 0.493);
             border-radius: 10px;
         }
-        #measurements input {
+        #measurements input, #img-urls input {
             width: 95%;
         }
-        #variety_color {
+        .variety-div {
+            margin-top: 20px;
+            border-top: 1px solid rgb(0, 97, 97);
+        }
+        .variety-div h5 {
+            margin-top: 5px;
+            margin-bottom: 20px;
+        }
+        .variety {
+            margin-bottom: 10px;
+        }
+        .variety label {
+            margin: 0;
+        }
+        .variety_color-div input {
             width: 150px;
         }
-        .variety_address {
+        .variety_address-div {
             margin-left: 20px;
         }
-        #variety_address {
+        .variety_address-div input {
             width: 330px;
+        }
+        .delete-variety {
+            align-self: center;
+            vertical-align: center;
         }
         h5 {
             margin: 20px 0 0;
@@ -62,6 +81,11 @@
         }
         .note-hr {
             margin: 30px 0 0;
+        }
+        .delete-variety{
+            font-size: 1.2rem;
+            cursor: pointer;
+            margin-left: 10px;
         }
     </style>
 </head>
@@ -109,7 +133,9 @@
 
             form.appendChild( setDivs('title', 'text', 'Başlık*', 'Örn: Kareli Ceket') );
             form.appendChild( setDivs('address', 'text', 'Ürünün Adresi*', 'https://...') );
-            form.appendChild( setDivs('img_url', 'text', 'Resim Adresi*', 'https://...') );
+
+            form.appendChild( setImgUrls() );
+
             form.appendChild( setDivs('category', 'text', 'Kategori*', 'Örn: Atkı') );
             form.appendChild( setDivs('brand', 'text', 'Marka*', 'Örn: Koton') );
             form.appendChild( setDivs('product_id', 'text', 'Ürün Kodu', 'Örn: ABC1234DEF001') );
@@ -136,9 +162,24 @@
             form.appendChild( setSaveBtn() );
         }
 
+        function setImgUrls(){
+            const div = document.createElement('div');
+            div.setAttribute('id', 'img-urls');
+
+            const title = document.createElement('h5');
+            title.textContent = 'Ürünlerin Resim adresleri';
+
+            div.appendChild(title);
+            div.appendChild( setDivs('img_main', 'text', 'Ana Resim*', 'https://...') );
+            div.appendChild( setDivs('img_front', 'text', 'Ön Kısım', 'https://...') );
+            div.appendChild( setDivs('img_back', 'text', 'Arka Kısım', 'https://...') );
+
+            return div;
+        }
+
         function setDivs(name, type, title, placeholder){
             const div = document.createElement('div');
-            div.setAttribute('class', name);
+            div.setAttribute('class', name + '-div');
             
             const label = document.createElement('label');
             label.setAttribute('for', name);
@@ -147,9 +188,13 @@
             const input = document.createElement('input');
             input.type = type;
             input.name = name;
-            input.id = name;
             input.placeholder = placeholder;
-            
+            if(name === 'variety_color' || name === 'variety_address'){
+                input.setAttribute('class', name);
+            } else {
+                input.id = name;
+            }
+
             div.appendChild(label);
             div.appendChild(input);
 
@@ -165,7 +210,7 @@
         function setMeasurements(){
             const div = document.createElement('div');
             div.setAttribute('id', 'measurements');
-            div.setAttribute('class', 'mt-3');
+            // div.setAttribute('class', 'mt-3');
 
             const btnsDiv = document.createElement('div');
             btnsDiv.setAttribute('class', 'd-flex justify-content-center');
@@ -250,21 +295,57 @@
             measurements.appendChild(containerDiv);
         }
 
-        function setColorVariety(form){
+        function setColorVariety(){
+            const varietyDiv = document.createElement('div');
+            varietyDiv.setAttribute('class', 'variety-div');
+
+            const titleDiv = document.createElement('div');
+            titleDiv.setAttribute('class', 'd-flex justify-content-between');
+            
             const title = document.createElement('h5');
             title.textContent = 'Ürün Çeşitleri';
 
-            const varietyDiv = document.createElement('div');
-            varietyDiv.setAttribute('id', 'variety');
-            varietyDiv.setAttribute('class', 'd-flex');
+            const varietyBtn = document.createElement('button');
+            varietyBtn.textContent = 'Çeşit Ekle';
+            varietyBtn.setAttribute('class', 'btn btn-sm btn-outline-info align-self-center');
+            varietyBtn.onclick = function(){
+                const noVariety = document.querySelector('.no-variety');
+                if(noVariety) noVariety.remove();
 
-            const variety_color = setDivs('variety_color', 'text', 'Çeşidin Rengi', 'Beyaz');
-            const variety_address = setDivs('variety_address', 'text', 'Çeşidin Adresi', 'https://...');
+                const inputDiv = document.createElement('div');
+                // inputDiv.setAttribute('id', 'variety');
+                inputDiv.setAttribute('class', 'd-flex variety');
+    
+                const variety_color = setDivs('variety_color', 'text', 'Çeşidin Rengi', 'Beyaz');
+                const variety_address = setDivs('variety_address', 'text', 'Çeşidin Adresi', 'https://...');
 
-            form.appendChild(title);
-            varietyDiv.appendChild(variety_color);
-            varietyDiv.appendChild(variety_address);
+                const deleteBtn = document.createElement('i');
+                deleteBtn.setAttribute('class', 'fas fa-times-circle text-danger delete-variety');
+                deleteBtn.onclick = function(){
+                    const allVariety = document.querySelectorAll('.variety');
+                    if(allVariety.length === 1) varietyDiv.appendChild( setNoVariety() );
+                    
+                    inputDiv.remove();
+                }
+
+                inputDiv.appendChild(variety_color);
+                inputDiv.appendChild(variety_address);
+                inputDiv.appendChild(deleteBtn);
+                varietyDiv.appendChild(inputDiv);
+            }
+
+            titleDiv.appendChild(title);
+            titleDiv.appendChild(varietyBtn);
+            varietyDiv.appendChild(titleDiv);
+            varietyDiv.appendChild( setNoVariety() );
             return varietyDiv;
+        }
+
+        function setNoVariety(){
+            const p = document.createElement('p');
+            p.setAttribute('class', 'no-variety');
+            p.textContent = 'Henüz ürün çeşidi eklenmedi.';
+            return p;
         }
 
         function setSaveBtn(){
@@ -300,7 +381,7 @@
             const productForm = document.querySelector('#product-form');
 
             const message = document.createElement('h6');
-            message.setAttribute('class', 'mt-4');
+            message.setAttribute('class', 'mt-4 success-message');
             message.textContent = 'Başarıyla kaydedildi.';
 
             const newProduct = document.createElement('button');
@@ -313,6 +394,7 @@
                 productForm.appendChild(form);
 
                 initializeForm();
+                message.remove();
                 this.remove();
             }
 
@@ -323,7 +405,6 @@
         function gatherInfo(){
             const title = document.querySelector('#title').value;
             const address = document.querySelector('#address').value;
-            const img_url = document.querySelector('#img_url').value;
             const category = document.querySelector('#category').value;
             const brand = document.querySelector('#brand').value;
             const product_id = document.querySelector('#product_id').value;
@@ -333,13 +414,39 @@
             const material = document.querySelector('#material').value;
             const color = document.querySelector('#color').value;
             const pattern = document.querySelector('#pattern').value || 'Düz Renk';
-            const variety_color = document.querySelector('#variety_color').value;
-            const variety_address = document.querySelector('#variety_address').value;
 
             let sizes = document.querySelector('#sizes');
             if (sizes && sizes.value !== '') {
                 sizes = sizes.value.replace(/\s+/g, '').split(',');
             } else sizes = [];
+
+            const img_main = document.querySelector('#img_main').value;
+            const img_front = document.querySelector('#img_front')
+                ? document.querySelector('#img_front').value :'';
+            const img_back = document.querySelector('#img_back')
+                ? document.querySelector('#img_back').value :'';
+                
+
+            const img_url = {
+                main: img_main,
+                front: img_front,
+                back: img_back
+            }
+
+            const variety_color = document.querySelector('.variety_color');
+            const variety_list = [];
+            if(variety_color){
+                const allColors = document.querySelectorAll('.variety_color');
+                const allAddressses = document.querySelectorAll('.variety_address');
+
+                const length = allColors.length;
+                for(let i = 0; i < length; i++){
+                    variety_list.push({
+                        name: allColors[i].value,
+                        address: allAddressses[i].value
+                    });
+                }
+            }
 
             const width = document.querySelector('#width')
                 ? Number(document.querySelector('#width').value) :0;
@@ -365,16 +472,9 @@
                 width: width,
                 length: length,
                 height: height,
-                color_variety: [],
+                variety: variety_list,
             }
-            if(variety_color && variety_address) {
-                info.color_variety = [
-                    {
-                        color: variety_color,
-                        address: variety_address
-                    }
-                ]
-            }
+
             return info;
         }
     
