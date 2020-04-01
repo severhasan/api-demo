@@ -1,7 +1,8 @@
 const   express = require('express'),
         app = express(),
         port = process.env.PORT || 3000,
-        bodyParser = require('body-parser');
+        bodyParser = require('body-parser'),
+        saveToDB = require('./db/save_products.js');
   
 
 // CONFIGURE APP
@@ -42,6 +43,7 @@ app.use(express.static(__dirname + "/public"));
 app.get('/', async (req, res) => {
     res.render('index', {title: 'Product API'});
 });
+
 
 // START APP
 app.listen(port, () => console.log(`Listening on port ${port}...`));

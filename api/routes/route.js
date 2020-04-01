@@ -1,14 +1,20 @@
 module.exports = function(app) {
-    const products = require('../controllers/controller');
+    const router = require('../controllers/controller');
   
     // products Routes
     app.route('/products')
-      .get(products.list_all_products)
-      .post(products.create_a_product);
+      .get(router.list_all_products)
+      .post(router.create_a_product);
   
   
-    app.route('/products/:productId')
-      .get(products.read_a_product)
-      .put(products.update_a_product)
-      .delete(products.delete_a_product);
+    app.route('/products/id/:productId')
+      .get(router.read_a_product)
+      .put(router.update_a_product)
+      .delete(router.delete_a_product);
+
+    app.route('/products/one')
+      .get(router.findone_by_tags);
+
+    app.route('/products/many')
+      .get(router.findmany_by_tags);
   };

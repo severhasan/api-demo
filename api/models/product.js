@@ -10,13 +10,29 @@ const productSchema = new mongoose.Schema({
         type: String,
         required: 'Adres boş bırakılamaz.',
     },
-    image_url: {
-        main: {
-            type: String,
-            required: 'Resim adresi boş bırakılamaz.',
-        },
-        front: String,
-        back: String
+    images: [{
+        type: String,
+        required: true
+    }],
+    product_id: {
+        type: String,
+        required: false,
+    },
+    brand: {
+        type: String,
+        required: true,
+    },
+    price: {
+        type: Number,
+        required: true,
+    },
+    sale_price: {
+        type: Number,
+        required: true,
+    },
+    color: {
+        type: String,
+        required: true,
     },
     category: {
         type: String,
@@ -42,40 +58,21 @@ const productSchema = new mongoose.Schema({
         default: 0,
         required: false,
     },
-    product_id: {
-        type: String,
-        required: false,
-    },
+    variants: [
+        {
+            name: String,
+            address: String,
+            product_id: String
+        }
+    ],
     description: {
         type: String,
         required: false,
-    },
-    brand: {
-        type: String,
-        required: true,
-    },
-    price: {
-        type: Number,
-        required: true,
-    },
-    sale_price: {
-        type: Number,
-        required: true,
     },
     material: {
         type: String,
         required: false,
     },
-    color: {
-        type: String,
-        required: true,
-    },
-    variety: [
-        {
-            name: String,
-            address: String
-        }
-    ],
     pattern: String,
     date_created: {
         type: Date,
